@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld
+  namespace: helloworld
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helloworld
+  template:
+    metadata:
+      labels:
+        app: helloworld
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args: ["echo Hello && sleep 600"]
