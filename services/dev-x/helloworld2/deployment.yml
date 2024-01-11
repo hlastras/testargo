@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+      argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: helloworld2
+  namespace: helloworld2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helloworld2
+  template:
+    metadata:
+      labels:
+        app: helloworld2
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args: ["echo Hello && sleep 600"]
