@@ -1,1 +1,1 @@
-this is for generate example revisions to test
+this is for generate example revisions to test argo
