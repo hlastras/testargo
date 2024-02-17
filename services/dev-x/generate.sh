@@ -33,6 +33,7 @@ spec:
     metadata:
       labels:
         app: helloworld${i}
+        owner: hector
     spec:
       containers:
       - name: busybox
