@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helloworld4
+  name: helloworld17
 spec:
   replicas: 0
   selector:
     matchLabels:
-      app: helloworld4
+      app: helloworld17
   template:
     metadata:
       labels:
-        app: helloworld4
+        app: helloworld17
     spec:
       containers:
       - name: busybox
