@@ -1,1 +1,1 @@
-this is for generate example revisions to test argo performance generating
+this is for generate example revisions to test argo performance generating manifest
