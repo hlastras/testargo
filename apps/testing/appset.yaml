@@ -1,0 +1,97 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: services
+  labels:
+    owner: hector
+    app: apps
+    tier: "3"
+spec:
+  generators:
+    - git:
+        repoURL: https://github.com/hlastras/testargo.git
+        revision: HEAD
+        directories:
+          - path: services/*/*/testing
+        requeueAfterSeconds: 3600
+  template:
+    metadata:
+      name: '{{path[2]}}'
+      labels:
+        owner: '{{path[1]}}'
+        app: '{{path[2]}}'  # service name
+      annotations:
+        # https://argo-cd.readthedocs.io/en/latest/operator-manual/high_availability/#webhook-and-manifest-paths-annotation
+        # A new commit to the Git repository invalidates cache for all applications
+        # configured in the repository that again negatively affect mono repositories
+        # with multiple applications. This annotation solves that problem.
+        argocd.argoproj.io/manifest-generate-paths: .
+    spec:
+      project: default # TODO Use projects for further customization
+      source:
+        repoURL: https://github.com/hlastras/testargo.git
+        targetRevision: HEAD
+        path: 'services/{{path[1]}}/{{path[2]}}'
+        plugin: {}
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{path[2]}}' # Same as service name. If they are different then it must be manually created.
+      # Sync policy
+      syncPolicy:
+        automated:
+          prune: true
+          allowEmpty: true
+        syncOptions:
+        - ApplyOutOfSyncOnly=true
+        - Validate=true # disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
+        - CreateNamespace=true # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
+        - PrunePropagationPolicy=foreground # Supported policies are background, foreground and orphan.
+        - ServerSideApply=true # avoids last-applied-configuration field. 
+        - FailOnSharedResource=true # avoids syncloops when two apps deploy the same resource
+        - Replace=true # Replaces resources to avoid errors mutating inmutable fields.
+        retry:
+          limit: 5 # number of failed sync attempt retries; unlimited number of attempts if less than 0
+          backoff:
+            duration: 5s # the amount to back off. Default unit is seconds, but could also be a duration (e.g. "2m", "1h")
+            factor: 2 # a factor to multiply the base duration after each failed retry
+            maxDuration: 3m # the maximum amount of time allowed for the backoff strategy
+      # Will ignore differences between live and desired states during the diff. Note that these configurations are not
+      # used during the sync process.
+      ignoreDifferences:
+      # for the specified json pointers
+      # Allow pod autoscalers to set a different value. Argo will not override it.
+      - group: apps
+        kind: Deployment
+        jsonPointers:
+        - /spec/replicas
+      - group: apps
+        kind: StatefulSet
+        jsonPointers:
+        - /spec/replicas
+        jqPathExpressions:
+        - .spec.volumeClaimTemplates[]?.kind
+        - .spec.volumeClaimTemplates[]?.apiVersion
+      # for the specified managedFields managers
+      - group: "*"
+        kind: "*"
+        managedFieldsManagers:
+        - kube-controller-manager
+      # Mutated secrets (by confidant) are marked as out of sync otherwise.
+      # Change an annotation to force synchronization when adding or modifying keys.
+      - kind: Secret
+        jsonPointers:
+        - /data
+        - /stringData
+      - group: apiextensions.k8s.io
+        kind: CustomResourceDefinition
+        jsonPointers:
+        - /spec/preserveUnknownFields
+      - group: argoproj.io
+        kind: Rollout
+        jsonPointers:
+        - /spec/replicas
+      - group: "autoscaling"
+        kind: "HorizontalPodAutoscaler"
+        jsonPointers:
+        - "/status"
