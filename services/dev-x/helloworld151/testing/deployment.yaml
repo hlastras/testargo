@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helloworld117
+  name: helloworld151
 spec:
   replicas: 0
   selector:
     matchLabels:
-      app: helloworld117
+      app: helloworld151
   template:
     metadata:
       labels:
-        app: helloworld117
+        app: helloworld151
         owner: hector3
     spec:
       containers:

@@ -12,7 +12,7 @@ spec:
     metadata:
       labels:
         app: helloworld150
-        owner: hector2
+        owner: hector3
     spec:
       containers:
       - name: busybox
