@@ -16,5 +16,10 @@ spec:
       containers:
       - name: busybox
         image: busybox
+        env:
+          - name: TESTENV
+            value: "${env.name}"
+          - name: TEST2
+            value: test.${env.hostnamename}
         command: ["/bin/sh", "-c"]
-        args: ["echo Hello && sleep 600"]
+        args: ["echo Hello ${env.name} && sleep 600"]

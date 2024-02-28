@@ -32,8 +32,7 @@ spec:
       source:
         repoURL: https://github.com/hlastras/testargo.git
         targetRevision: HEAD
-        path: 'services/{{path[1]}}/{{path[2]}}'
-        plugin: {}
+        path: 'services/{{path[1]}}/{{path[2]}}/testing'
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{path[2]}}' # Same as service name. If they are different then it must be manually created.
