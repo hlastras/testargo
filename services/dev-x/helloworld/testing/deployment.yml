@@ -18,8 +18,6 @@ spec:
         env:
           - name: TESTENV
             value: "var1"
-          - name: TESTENV2
-            value: "var1"
           - name: TESTENV5
             value: "var1"
         command: ["/bin/sh", "-c"]
