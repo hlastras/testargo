@@ -26,8 +26,6 @@ spec:
             value: "var1"
           - name: TESTENV6
             value: "var1"
-          - name: TESTENV7
-            value: "var1"
           - name: TESTENV8
             value: "var1"
           - name: TESTENV9
