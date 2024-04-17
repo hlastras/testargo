@@ -18,7 +18,23 @@ spec:
         env:
           - name: TESTENV
             value: "var1"
+          - name: TESTENV1
+            value: "var1"
+          - name: TESTENV2
+            value: "var1"
+          - name: TESTENV3
+            value: "var1"
+          - name: TESTENV4
+            value: "var1"
           - name: TESTENV5
+            value: "var1"
+          - name: TESTENV6
+            value: "var1"
+          - name: TESTENV7
+            value: "var1"
+          - name: TESTENV8
+            value: "var1"
+          - name: TESTENV9
             value: "var1"
         command: ["/bin/sh", "-c"]
         args: ["echo Hello && sleep 600"]
