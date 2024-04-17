@@ -18,7 +18,5 @@ spec:
         env:
           - name: TESTENV
             value: "var1"
-          - name: TEST3
-            value: "var3"
         command: ["/bin/sh", "-c"]
         args: ["echo Hello && sleep 600"]
