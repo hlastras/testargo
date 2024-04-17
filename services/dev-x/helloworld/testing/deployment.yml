@@ -17,8 +17,10 @@ spec:
         image: busybox
         env:
           - name: TESTENV
-            value: "${env.name}"
+            value: "var1"
           - name: TEST2
-            value: test.${env.hostnamename}
+            value: "var2"
+          - name: TEST3
+            value: "var3"
         command: ["/bin/sh", "-c"]
-        args: ["echo Hello ${env.name} && sleep 600"]
+        args: ["echo Hello && sleep 600"]
